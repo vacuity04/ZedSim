@@ -8,5 +8,4 @@ public class SidePanel extends JPanel {
 	public SidePanel() {
 		
 	}
-	
 }

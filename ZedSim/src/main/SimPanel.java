@@ -35,6 +35,5 @@ public class SimPanel extends JPanel {
 		if(yDelta > 900 || yDelta < 0) {
 			yDir *= -1;
 		}
-		
 	}
 }
