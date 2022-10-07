@@ -14,23 +14,22 @@ public class Zed {
 	int yVel;
 	int initSpeed = 10;
 	
-	Zed(int name) {
-		
+	// Class constructor
+	Zed(int name) {		
 		random = new Random();
 		
 		this.name = name;
 		this.hp = random.nextInt(55,85);
 		this.xPos = random.nextInt(1600);
 		this.yPos = random.nextInt(900);
-		
 	}
 	
+	// Display individual Zed info on console
 	public void printZed() {
 		System.out.println(this.name + "\tHP: " + this.hp + "\tx: " + this.xPos + "\ty: " + this.yPos);
 	}
 	
 	public void draw(Graphics g) {
-		
 		g.fillOval(xPos, yPos,  10,  10);
 	}
 }

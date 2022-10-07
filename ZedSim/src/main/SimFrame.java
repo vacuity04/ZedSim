@@ -7,6 +7,7 @@ public class SimFrame extends JFrame {
 
 	JFrame frame;
 	
+	// Class constructor
 	public SimFrame(SimPanel simPanel, SidePanel sidePanel) {
 	
 		frame = new JFrame();
@@ -16,9 +17,11 @@ public class SimFrame extends JFrame {
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setLayout(new BorderLayout());
-		simPanel.setPreferredSize(new Dimension(1500,900));
+		simPanel.setPreferredSize(new Dimension(1450,900));
+		simPanel.setBackground(Color.green);
 		frame.add(simPanel,BorderLayout.WEST);
-		sidePanel.setPreferredSize(new Dimension(100,900));
+		sidePanel.setBackground(Color.red);
+		sidePanel.setPreferredSize(new Dimension(150,900));
 		frame.add(sidePanel,BorderLayout.EAST);
 		
 		frame.setVisible(true);
