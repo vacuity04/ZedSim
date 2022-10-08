@@ -1,10 +1,13 @@
 package main;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class Sim implements ActionListener, Runnable {
 
@@ -16,6 +19,7 @@ public class Sim implements ActionListener, Runnable {
 	
 	JButton spawnButton;
 	JButton displayButton;	// print zed info to console, for now
+	JLabel fpsLabel;
 	
 	ArrayList<Zed> zeds = new ArrayList<Zed>();
 
@@ -25,15 +29,23 @@ public class Sim implements ActionListener, Runnable {
 		sidePanel = new SidePanel();
 		simFrame = new SimFrame(simPanel, sidePanel);
 		
+		fpsLabel = new JLabel("");
 		spawnButton = new JButton("Spawn");
 		displayButton = new JButton("Display");
 		
-		spawnButton.setBounds(45, 10, 80, 50);
+		sidePanel.setLayout(null);
+		
+		fpsLabel.setFont(new Font("",Font.BOLD,14));
+		fpsLabel.setBackground(Color.black);
+		fpsLabel.setBounds(85, 0, 80, 20);
+		
+		spawnButton.setBounds(45, 30, 80, 40);
 		spawnButton.addActionListener(this);
 		
-		displayButton.setBounds(45, 70, 80, 50);
+		displayButton.setBounds(45, 80, 80, 40);
 		displayButton.addActionListener(this);
 		
+		sidePanel.add(fpsLabel);
 		sidePanel.add(spawnButton);
 		sidePanel.add(displayButton);
 		
@@ -87,7 +99,8 @@ public class Sim implements ActionListener, Runnable {
 			
 			if(System.currentTimeMillis() - lastCheck >= 1000) {
 				lastCheck = System.currentTimeMillis();
-				System.out.println("FPS: " + frames);
+				//System.out.println("FPS: " + frames);
+				fpsLabel.setText("FPS: " + String.valueOf(frames));
 				frames = 0;
 			}
 		}
