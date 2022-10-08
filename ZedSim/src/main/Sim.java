@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Sim implements ActionListener, Runnable {
 
 	// Class constructor
 	public Sim() {
-		simPanel = new SimPanel();
+		simPanel = new SimPanel(this);
 		sidePanel = new SidePanel();
 		simFrame = new SimFrame(simPanel, sidePanel);
 		
@@ -73,9 +74,22 @@ public class Sim implements ActionListener, Runnable {
 
 	// Start the simulation loop in Runnable Thread
 	private void startSimLoop() {
-		
 		simThread = new Thread(this);
 		simThread.start();
+	}
+	
+	// Update movement
+	public void update() {
+		for(Zed z : zeds) {
+			z.update();
+		}
+	}
+	
+	// Render entities
+	public void render(Graphics g) {
+		for(Zed z : zeds) {
+			z.draw(g);
+		}
 	}
 	
 	// Simulation loop code
@@ -92,6 +106,7 @@ public class Sim implements ActionListener, Runnable {
 			now = System.nanoTime();
 			
 			if(System.nanoTime() - lastFrame >= timePerFrame) {				
+				update();
 				simPanel.repaint();
 				lastFrame = now;
 				frames++;
