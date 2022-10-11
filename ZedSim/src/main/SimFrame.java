@@ -20,7 +20,7 @@ public class SimFrame extends JFrame {
 		simPanel.setPreferredSize(new Dimension(1450,900));
 		simPanel.setBackground(Color.green);
 		frame.add(simPanel,BorderLayout.WEST);
-		sidePanel.setBackground(Color.red);
+		sidePanel.setBackground(Color.gray);
 		sidePanel.setPreferredSize(new Dimension(150,900));
 		frame.add(sidePanel,BorderLayout.EAST);
 		

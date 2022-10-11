@@ -7,21 +7,36 @@ public class Zed {
 
 	Random random;
 	int name;
-	int hp;
+	float hp;
+	float hunger;
 	float xPos;
 	float yPos;
 	float xVel = 0.01f;
 	float yVel = 0.01f;
-	int initSpeed = 25;
+	int initSpeed = 1;
+	final int UNIT_DIAMETER = 15;
 	
 	// Class constructor
 	Zed(int name) {		
 		random = new Random();
 		
 		this.name = name;
-		this.hp = random.nextInt(55,85);
-		this.xPos = random.nextInt(1600);
-		this.yPos = random.nextInt(900);
+		this.hp = random.nextFloat(55,85);
+		this.hunger = random.nextFloat(0.995f,1.000f);
+		
+		// set starting position x,y
+		this.xPos = random.nextInt(1400);
+		this.yPos = random.nextInt(850);
+		
+		// set starting direction x,y
+		if(random.nextBoolean()==true)
+			this.xVel *= random.nextFloat(10);
+		else
+			this.xVel *= -random.nextFloat(10);
+		if(random.nextBoolean()==true)
+			this.yVel *= random.nextFloat(10);
+		else
+			this.yVel *= -random.nextFloat(10);
 	}
 	
 	// Display individual Zed info on console
@@ -31,21 +46,42 @@ public class Zed {
 	
 	public void update() {
 		updateZedPos();
+		updateHP();
 	}
 	
 	public void draw(Graphics g) {
-		g.fillOval((int)xPos, (int)yPos,  20,  20);
+		// if dead zed, color to brown
+		if(this.hp <= 0) {
+			g.setColor(new Color(139,69,19));
+		}
+		else {
+			g.setColor(Color.black);
+		}
+		g.fillOval((int)xPos, (int)yPos, UNIT_DIAMETER, UNIT_DIAMETER);
 	}
 	
 	private void updateZedPos() {
-		xPos += xVel * initSpeed;
-		if(xPos > 1450 || xPos < 0) {
-			xVel *= -1;
+		// if dead zed, no movement
+		if(this.hp <= 0) {
+			xPos += 0;
+			yPos += 0;
 		}
-		
-		yPos += yVel * initSpeed;
-		if(yPos > 900 || yPos < 0) {
-			yVel *= -1;
+		else {
+			xPos += xVel * initSpeed;
+			if(xPos > 1450 - UNIT_DIAMETER || xPos < 0) {
+				xVel *= -1;
+			}
+			
+			yPos += yVel * initSpeed;
+			if(yPos > 860 - UNIT_DIAMETER || yPos < 0) {
+				yVel *= -1;
+			}
+		}
+	}
+	
+	private void updateHP() {
+		if(this.hp > 0) {
+			this.hp *= this.hunger;
 		}
 	}
 }

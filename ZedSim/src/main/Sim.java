@@ -16,11 +16,14 @@ public class Sim implements ActionListener, Runnable {
 	private SimPanel simPanel;
 	private SidePanel sidePanel;
 	private Thread simThread;
-	private final int FPS_TARGET = 120;
+	private final int FPS_TARGET = 120;	// frames per second
+	private final int UPS_TARGET = 200;	// updates per second
 	
 	JButton spawnButton;
 	JButton displayButton;	// print zed info to console, for now
+	JButton spawn100Button;
 	JLabel fpsLabel;
+	JLabel upsLabel;
 	
 	ArrayList<Zed> zeds = new ArrayList<Zed>();
 
@@ -30,9 +33,11 @@ public class Sim implements ActionListener, Runnable {
 		sidePanel = new SidePanel();
 		simFrame = new SimFrame(simPanel, sidePanel);
 		
-		fpsLabel = new JLabel("");
 		spawnButton = new JButton("Spawn");
+		spawn100Button = new JButton("Spawn 100");
 		displayButton = new JButton("Display");
+		fpsLabel = new JLabel("");
+		upsLabel = new JLabel("");
 		
 		sidePanel.setLayout(null);
 		
@@ -40,14 +45,23 @@ public class Sim implements ActionListener, Runnable {
 		fpsLabel.setBackground(Color.black);
 		fpsLabel.setBounds(85, 0, 80, 20);
 		
-		spawnButton.setBounds(45, 30, 80, 40);
+		upsLabel.setFont(new Font("",Font.BOLD,14));
+		upsLabel.setBackground(Color.black);
+		upsLabel.setBounds(85, 20, 80, 20);
+		
+		spawnButton.setBounds(35, 50, 100, 40);
 		spawnButton.addActionListener(this);
 		
-		displayButton.setBounds(45, 80, 80, 40);
+		spawn100Button.setBounds(35, 100, 100, 40);
+		spawn100Button.addActionListener(this);
+		
+		displayButton.setBounds(35, 150, 100, 40);
 		displayButton.addActionListener(this);
 		
 		sidePanel.add(fpsLabel);
+		sidePanel.add(upsLabel);
 		sidePanel.add(spawnButton);
+		sidePanel.add(spawn100Button);
 		sidePanel.add(displayButton);
 		
 		startSimLoop();
@@ -69,6 +83,13 @@ public class Sim implements ActionListener, Runnable {
 			for(Zed z : zeds) {
 				z.printZed();
 			}
+		}
+		
+		if(e.getSource() == spawn100Button) {
+			for(int i = 0; i < 100; i++) {
+				newZed();
+			}
+			System.out.println("100 Zeds generated");
 		}
 	}
 
@@ -97,26 +118,42 @@ public class Sim implements ActionListener, Runnable {
 	public void run() {
 		
 		double timePerFrame = 1000000000.0 / FPS_TARGET;
-		long lastFrame = System.nanoTime();
-		long now = System.nanoTime();
+		double timePerUpdate = 1000000000.0 / UPS_TARGET;
+		
+		long previousTime = System.nanoTime();
+		
 		int frames = 0;
+		int updates = 0;
 		long lastCheck = System.currentTimeMillis();
 		
+		double deltaU = 0;
+		double deltaF = 0;
+		
 		while(true) {
-			now = System.nanoTime();
+			long currentTime = System.nanoTime();
 			
-			if(System.nanoTime() - lastFrame >= timePerFrame) {				
+			deltaU += (currentTime - previousTime) / timePerUpdate;
+			deltaF += (currentTime - previousTime) / timePerFrame;
+			previousTime = currentTime;
+			
+			if(deltaU >= 1) {
 				update();
+				updates++;
+				deltaU--;
+			}
+			
+			if(deltaF >= 1) {
 				simPanel.repaint();
-				lastFrame = now;
 				frames++;
+				deltaF--;
 			}
 			
 			if(System.currentTimeMillis() - lastCheck >= 1000) {
 				lastCheck = System.currentTimeMillis();
-				//System.out.println("FPS: " + frames);
 				fpsLabel.setText("FPS: " + String.valueOf(frames));
+				upsLabel.setText("UPS: " + String.valueOf(updates));
 				frames = 0;
+				updates = 0;
 			}
 		}
 	}
