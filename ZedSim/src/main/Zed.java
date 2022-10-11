@@ -14,7 +14,7 @@ public class Zed {
 	float xVel = 0.01f;
 	float yVel = 0.01f;
 	int initSpeed = 1;
-	final int UNIT_DIAMETER = 15;
+	final int UNIT_DIAMETER = 10;
 	
 	// Class constructor
 	Zed(int name) {		
